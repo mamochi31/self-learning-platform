@@ -1,0 +1,65 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/client"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  profile   Profile?
+  flows     LearningFlow[]
+  books     Book[]
+  articles  Article[]
+}
+
+model LearningFlow {
+  id        String   @id @default(uuid())
+  title     String
+  nodes     Json     // React Flow のノードデータ
+  edges     Json     // React Flow のエッジデータ
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  books     Book[]   // 学習フローに関連付けられた書籍
+}
+
+model Book {
+  id          String   @id @default(uuid())
+  isbn        String?  @unique
+  title       String
+  author      String?
+  thumbnail   String?
+  status      ReadingStatus @default(UNREAD)
+  flowId      String?
+  flow        LearningFlow? @relation(fields: [flowId], references: [id])
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+}
+
+enum ReadingStatus {
+  UNREAD
+  READING
+  COMPLETED
+}
+
+model Profile {
+  id     String  @id @default(uuid())
+  name   String?
+  bio    String?
+  userId String  @unique
+  user   User    @relation(fields: [userId], references: [id])
+}
+
+model Article {
+  id        String   @id @default(uuid())
+  title     String
+  content   String   // Markdown形式
+  published Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  authorId  String
+  author    User     @relation(fields: [authorId], references: [id])
+}

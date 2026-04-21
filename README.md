@@ -1,159 +1,88 @@
-# Turborepo starter
+# Self-Learning Platform
 
-This Turborepo starter is maintained by the Turborepo core team.
+「自己学習のすべてを一つの場所で」をコンセプトにした、エンジニアのためのパーソナル・プラットフォーム。
+学習フローの可視化、タスク管理、成果物の一元管理、そしてAIを活用した知識の定着までを完結させることを目指します。
 
-## Using this example
+## 1. プロジェクト・ビジョン
 
-Run the following command:
+エンジニアが学習内容を体系的に整理し、活動記録を資産として一元管理できる場を提供します。
+- **学習フローの可視化**: React Flow による技術ロードマップの管理。
+- **活動集約 (Portfolio Hub)**: GitHub, Qiita, note 等の活動情報を集約。
+- **知的財産の蓄積**: Markdown ベースのブログエンジンと技術書ライブラリの連携。
+- **AI 活用**: 記事や書籍の要約、学習内容に基づいた確認クイズの自動生成。
 
-```sh
-npx create-turbo@latest
+## 2. 技術スタック
+
+モダンかつメンテナンス性を重視した最新の技術構成を採用しています。
+
+- **Monorepo**: Turborepo, npm workspaces
+- **Frontend**: Next.js (App Router), Tailwind CSS, React Flow
+- **Backend**: NestJS (Modular Monolith)
+- **Database/ORM**: PostgreSQL, Prisma 7 (Custom Encapsulation)
+- **Infrastructure**: Docker, Docker Compose
+- **Language**: TypeScript (v5.x / TypeScript 7.0 Ready)
+- **Architecture**: ドメイン駆動設計 (DDD) の思想に基づく 4 層レイヤー構造
+
+## 3. ディレクトリ構成
+
+```text
+.
+├── apps
+│   ├── api                 # NestJS (Backend: 3001)
+│   │   └── src/modules     # DDD 構成 (domain, application, infrastructure, presentation)
+│   └── web                 # Next.js (Frontend: 3000)
+├── packages
+│   └── database            # 共有 Prisma パッケージ
+│       ├── prisma/schema.prisma
+│       └── generated/client  # ホーイスティングを回避した独自の型生成先
+├── docker-compose.yml
+└── package.json
 ```
 
-## What's inside?
+## 4. こだわりのポイント
 
-This Turborepo includes the following packages/apps:
+- **DDD の実践**: ビジネスロジック（ドメイン）を技術基盤（インフラ）から分離し、長期的な拡張性を確保。
+- **Prisma 7 の最適化**: 接続情報を `prisma.config.ts` で管理し、`dotenv` による安全な注入と、パッケージ内への型定義のカプセル化を実現。
+- **最新の TS 設定**: `moduleResolution: "Bundler"` や `module: "ESNext"`, `target: "ES2022"` を採用し、次世代標準（TS 7.0）に準拠したクリーンなビルド環境を構築。
+- **DX (開発体験)**: 新しい ESLint の形式である Flat Config (`eslint.config.mjs`) を導入し、モノレポ全体で統一されたクリーンな Lint 環境を構築。
 
-### Apps and Packages
+## 5. 起動手順
 
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
+### 5.1 事前準備
+- Node.js (最新の LTS 推奨)
+- Docker / Docker Desktop
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
+### 5.2 セットアップ
+1. **依存関係のインストール**:
+   ```bash
+   npm install
+   ```
 
-### Utilities
+2. **環境変数の設定**:
+   `packages/database/.env` を作成し、データベース接続情報を設定します。
+   ```text
+   DATABASE_URL="postgresql://user:password@localhost:5432/self_learning_db?schema=public"
+   ```
 
-This Turborepo has some additional tools already setup for you:
+3. **データベースの起動**:
+   ```bash
+   docker compose up -d
+   ```
 
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
+4. **マイグレーションと型定義の生成**:
+   ```bash
+   cd packages/database
+   npx prisma migrate dev --name init
+   npx prisma generate
+   ```
 
-### Build
-
-To build all apps and packages, run the following command:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
-
-```sh
-cd my-turborepo
-turbo build
+### 5.3 アプリケーションの実行
+ルートディレクトリにて、モノリポ全体を一括起動します。
+```bash
+npm run dev
 ```
+- API (NestJS): `http://localhost:3001`
+- Web (Next.js): `http://localhost:3000`
 
-Without global `turbo`, use your package manager:
-
-```sh
-cd my-turborepo
-npx turbo build
-npm dlx turbo build
-npm exec turbo build
-```
-
-You can build a specific package by using a [filter](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters):
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
-
-```sh
-turbo build --filter=docs
-```
-
-Without global `turbo`:
-
-```sh
-npx turbo build --filter=docs
-npm exec turbo build --filter=docs
-npm exec turbo build --filter=docs
-```
-
-### Develop
-
-To develop all apps and packages, run the following command:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
-
-```sh
-cd my-turborepo
-turbo dev
-```
-
-Without global `turbo`, use your package manager:
-
-```sh
-cd my-turborepo
-npx turbo dev
-npm exec turbo dev
-npm exec turbo dev
-```
-
-You can develop a specific package by using a [filter](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters):
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
-
-```sh
-turbo dev --filter=web
-```
-
-Without global `turbo`:
-
-```sh
-npx turbo dev --filter=web
-npm exec turbo dev --filter=web
-npm exec turbo dev --filter=web
-```
-
-### Remote Caching
-
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
-
-Turborepo can use a technique known as [Remote Caching](https://turborepo.dev/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
-
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
-
-```sh
-cd my-turborepo
-turbo login
-```
-
-Without global `turbo`, use your package manager:
-
-```sh
-cd my-turborepo
-npx turbo login
-npm exec turbo login
-npm exec turbo login
-```
-
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
-
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
-
-```sh
-turbo link
-```
-
-Without global `turbo`:
-
-```sh
-npx turbo link
-npm exec turbo link
-npm exec turbo link
-```
-
-## Useful Links
-
-Learn more about the power of Turborepo:
-
-- [Tasks](https://turborepo.dev/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.dev/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.dev/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.dev/docs/reference/configuration)
-- [CLI Usage](https://turborepo.dev/docs/reference/command-line-reference)
+---
+Developed as a Next.js + NestJS Personal Platform Project.
