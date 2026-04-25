@@ -1,0 +1,41 @@
+{
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "./dist",
+    "module": "Node16",
+    "moduleResolution": "Node16", // node から変更
+    "target": "ESNext",
+    "types": [
+      "node",
+      "jest"
+    ],
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "declaration": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "allowJs": true,
+    "sourceMap": true,
+    "incremental": false,
+    "strictNullChecks": false,
+    "noImplicitAny": false,
+    "strictBindCallApply": false,
+    "noFallthroughCasesInSwitch": false,
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ], // baseUrl なしでの相対パス指定
+      "@repo/database": [
+        "../../packages/database/generated/client/index.d.ts"
+      ]
+    }
+  },
+  "include": [
+    "src/**/*.ts",
+    "./.eslintrc.cjs"
+  ]
+}

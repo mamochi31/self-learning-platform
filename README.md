@@ -84,5 +84,12 @@ npm run dev
 - API (NestJS): `http://localhost:3001`
 - Web (Next.js): `http://localhost:3000`
 
+### 5.4 登録データの確認
+packages/databaseにて、Prisma Studioを起動します。
+```bash
+cd packages/database
+npx prisma studio
+```
+
 ---
 Developed as a Next.js + NestJS Personal Platform Project.
