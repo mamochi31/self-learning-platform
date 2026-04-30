@@ -20,7 +20,7 @@
 - **Backend**: NestJS (Modular Monolith)
 - **Database/ORM**: PostgreSQL, Prisma 7 (Custom Encapsulation)
 - **Infrastructure**: Docker, Docker Compose
-- **Language**: TypeScript (v5.x / TypeScript 7.0 Ready)
+- **Language**: TypeScript (v5.x)
 - **Architecture**: ドメイン駆動設計 (DDD) の思想に基づく 4 層レイヤー構造
 
 ## 3. ディレクトリ構成
@@ -43,7 +43,7 @@
 
 - **DDD の実践**: ビジネスロジック（ドメイン）を技術基盤（インフラ）から分離し、長期的な拡張性を確保。
 - **Prisma 7 の最適化**: 接続情報を `prisma.config.ts` で管理し、`dotenv` による安全な注入と、パッケージ内への型定義のカプセル化を実現。
-- **最新の TS 設定**: `moduleResolution: "Bundler"` や `module: "ESNext"`, `target: "ES2022"` を採用し、次世代標準（TS 7.0）に準拠したクリーンなビルド環境を構築。
+- **最新の TS 設定**: `moduleResolution: "Node16"` や `module: "Node16"`, `target: "ESNext"` を採用し、モダンなモジュール解決に準拠したクリーンなビルド環境を構築。
 - **DX (開発体験)**: 新しい ESLint の形式である Flat Config (`eslint.config.mjs`) を導入し、モノレポ全体で統一されたクリーンな Lint 環境を構築。
 
 ## 5. 起動手順
@@ -92,4 +92,3 @@ npx prisma studio
 ```
 
 ---
-Developed as a Next.js + NestJS Personal Platform Project.
