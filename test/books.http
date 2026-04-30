@@ -1,0 +1,13 @@
+### 書籍登録
+POST http://localhost:3001/books
+Content-Type: application/json
+
+{
+  "title": "読み解くDDD2",
+  "isbn": "978-4000000002",
+  "author": "ドメイン 太郎",
+  "userId": "test1"
+}
+
+### 書籍取得
+GET http://localhost:3001/books
