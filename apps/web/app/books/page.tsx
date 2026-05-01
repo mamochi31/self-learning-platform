@@ -1,6 +1,8 @@
 import React from "react";
-import Image from "next/image";
 import { createBookAction } from "./actions";
+// 以下のインポートを切り替えることでメモ化による挙動の違いを確認可能
+import BookListClient from "./components/book-list-client"; // メモ化したコンポーネント
+// import BookListClient from "./components/book-list-client-unoptimized"; // メモ化していないコンポーネント(比較用)
 
 // 書籍データの型定義
 interface Book {
@@ -44,13 +46,13 @@ export default async function BooksPage() {
             name="title"
             placeholder="タイトル (必須)"
             required
-            className="p-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all bg-white"
+            className="p-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
           />
           <input
             type="text"
             name="author"
             placeholder="著者"
-            className="p-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all bg-white"
+            className="p-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
           />
         </div>
         <button
@@ -61,34 +63,8 @@ export default async function BooksPage() {
         </button>
       </form>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {books.map((book) => (
-          <div
-            key={book._id}
-            className="group flex flex-col border border-slate-200 p-5 rounded-2xl shadow-sm hover:shadow-md transition-all bg-white"
-          >
-            <div className="flex-grow">
-              <h2 className="font-bold text-lg leading-snug line-clamp-2 mb-1 group-hover:text-blue-600 transition-colors">
-                {book._props.title}
-              </h2>
-              <p className="text-slate-500 text-sm mb-4">
-                {book._props.author || "著者不明"}
-              </p>
-            </div>
-            {book._props.thumbnail && (
-              <div className="mt-auto flex justify-center w-full bg-slate-50 rounded-lg overflow-hidden border border-slate-100 pt-4 pb-4">
-                <Image
-                  src={book._props.thumbnail}
-                  alt={book._props.title}
-                  width={120}
-                  height={160}
-                  className="h-40 w-auto object-cover shadow-sm group-hover:scale-105 transition-transform duration-300"
-                />
-              </div>
-            )}
-          </div>
-        ))}
-      </div>
+      {/* クライアント側での検索・表示エリア */}
+      <BookListClient initialBooks={books} />
     </div>
   );
 }
